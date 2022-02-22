@@ -1,0 +1,49 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\sprin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add -D tailwind-styled-components
+
+PATH: 
+  C:\Program Files\PowerShell\7;C:\Python39\Scripts\;C:\Python39\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files (x86)\dotnet\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\PowerShell\7\;C:\Program Files\PuTTY\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\Users\sprin\AppData\Local\Microsoft\WindowsApps;C:\Users\sprin\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\sprin\.dotnet\tools;C:\Users\sprin\AppData\Local\GitHubDesktop\bin;C:\Users\sprin\Documents\flutter_windows_2.10.1-stable\flutter\bin;C:\Users\sprin\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  16.14.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\websites\nextride\car-site\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node'
+
+npm manifest: 
+  {
+    "name": "car-site",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "dependencies": {
+      "mapbox-gl": "^2.7.0",
+      "next": "12.1.0",
+      "react": "17.0.2",
+      "react-dom": "17.0.2"
+    },
+    "devDependencies": {
+      "autoprefixer": "^10.4.2",
+      "eslint": "8.9.0",
+      "eslint-config-next": "12.1.0",
+      "postcss": "^8.4.6",
+      "tailwindcss": "^3.0.23"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
