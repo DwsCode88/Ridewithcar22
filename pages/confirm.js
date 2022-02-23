@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import Link from "next/link";
-import Map from "./components/Map";
+import Map from "../components/Map";
 import { useRouter } from "next/router";
-import RideSelector from "./components/RideSelector";
+import RideSelector from "../components/RideSelector";
 
 const Confirm = () => {
   const router = useRouter();
@@ -12,8 +12,8 @@ const Confirm = () => {
   console.log("pickup", pickup);
   console.log("dropoff", dropoff);
 
-  const [pickupCoordinates, setPickupCoordinates] = useState();
-  const [dropoffCoordinates, setDropoffCoordinates] = useState();
+  const [pickupCoordinates, setPickupCoordinates] = useState([0, 0]);
+  const [dropoffCoordinates, setDropoffCoordinates] = useState([0, 0]);
 
   const getPickCoordinates = (pickup) => {
     fetch(
@@ -52,12 +52,20 @@ const Confirm = () => {
 
   return (
     <Wrapper>
+      <ButtonContainer>
+        <Link href="/search">
+          <BackButton src="https://img.icons8.com/ios-filled/50/000000/left.png" />
+        </Link>
+      </ButtonContainer>
       <Map
         pickupCoordinates={pickupCoordinates}
         dropoffCoordinates={dropoffCoordinates}
       />
       <RideContainer>
-        <RideSelector />
+        <RideSelector
+          pickupCoordinates={pickupCoordinates}
+          dropoffCoordinates={dropoffCoordinates}
+        />
 
         <ConfirmButtonContainer>
           <ConfirmButton>Confirm Ride</ConfirmButton>
@@ -82,4 +90,10 @@ flex-1 flex flex-col h-1/2
 `;
 const ConfirmButtonContainer = tw.div`
 border-t-2
+`;
+const ButtonContainer = tw.div`
+rounded-full absolute top-4 left-4 z-10 bg-orange-500 shadow-md cursor-pointer
+`;
+const BackButton = tw.img`
+h-full object-contain
 `;
