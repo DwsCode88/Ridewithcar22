@@ -35,7 +35,7 @@ export default function Home() {
           <Logo src="https://scontent.fric1-2.fna.fbcdn.net/v/t39.30808-6/270106542_101068099125725_5749922900883204496_n.png?_nc_cat=103&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=twpAcQozAjgAX_bjrDF&_nc_ht=scontent.fric1-2.fna&oh=00_AT-u4po2m6nLRSVh1myvnMdhNjA25WBOYhN2QCcGSi_0kg&oe=6217D9B4"></Logo>
           <Profile>
             <Name>{user && user.name}</Name>
-            <UserImage src={user && user.photoURL} />
+            <UserImage src={user && user.photoUrl} />
           </Profile>
         </Header>
 
