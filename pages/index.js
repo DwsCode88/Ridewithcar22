@@ -1,11 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import tw from "tailwind-styled-components";
 import Map from "../components/Map";
 import Link from "next/link";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          name: user.displayName,
+          photoUrl: user.photoURL,
+        });
+      } else {
+        // if they are not logged in goes back to login page
+        setUser(null);
+        router.push("/login");
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       <Map />
@@ -13,8 +34,8 @@ export default function Home() {
         <Header>
           <Logo src="https://scontent.fric1-2.fna.fbcdn.net/v/t39.30808-6/270106542_101068099125725_5749922900883204496_n.png?_nc_cat=103&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=twpAcQozAjgAX_bjrDF&_nc_ht=scontent.fric1-2.fna&oh=00_AT-u4po2m6nLRSVh1myvnMdhNjA25WBOYhN2QCcGSi_0kg&oe=6217D9B4"></Logo>
           <Profile>
-            <Name>Jonathan BigSmalls</Name>
-            <UserImage src="https://scontent.fric1-2.fna.fbcdn.net/v/t39.30808-1/c0.17.100.100a/p100x100/267310932_7205037039510139_3359638819437920148_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=SWLK3t3kZo4AX8y0mvs&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fric1-2.fna&oh=00_AT-pHR8o7MftHg70rTcg3715NV-QKmW_QFt0yhdvuDL5Yw&oe=621680B9" />
+            <Name>{user && user.name}</Name>
+            <UserImage src={user && user.photoURL} />
           </Profile>
         </Header>
 
