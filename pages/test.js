@@ -2,11 +2,32 @@ import { useState } from "react";
 import tw from "tailwind-styled-components";
 import Link from "next/link";
 import mapboxgl from "!mapbox-gl";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
-const Test = () => {
+const Search = () => {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
   const [test, setTest] = useState("");
+  const [value, setValue] = useState(null);
+  const [fromaddress, setFromAddress] = useState(null);
+  const [toaddress, setToAddress] = useState(null);
+  const [select, setSelect] = useState(null);
+  const [select2, setSelect2] = useState(null);
+
+  const handleFocus = (element) => {
+    //from input felid
+    if (fromaddress) {
+      select.select.state.inputValue = fromaddress.label;
+    }
+  };
+  const handleFocus2 = (element) => {
+    //to input field
+    if (toaddress) {
+      select.select.state.inputValue = toaddress.label;
+    }
+  };
+  console.log("From", fromaddress.label);
+  console.log("To", toaddress.label);
 
   return (
     <Wrapper>
@@ -23,16 +44,69 @@ const Test = () => {
           <Square src="https://img.icons8.com/windows/50/000000/square-full.png" />
         </FromToIcons>
         <InputBoxes>
-          <Input
+          <Input>
+            <GooglePlacesAutocomplete
+              apiKey="AIzaSyDDO2RdmUmclDGV7cTyhZQvK5xWiKnv0Vk"
+              apiOptions={{ language: "en", region: "US" }}
+              autocompletionRequest={{
+                componentRestrictions: {
+                  country: "US",
+                },
+              }}
+              selectProps={{
+                ref: (ref) => {
+                  setSelect(ref);
+                },
+                value: fromaddress,
+                blurInputOnSelect: true,
+                onChange: setFromAddress,
+                onFocus: handleFocus,
+                placeholder: "Where from?",
+                styles: {
+                  input: (provided) => ({
+                    ...provided,
+                    color: "orange", //text color
+                  }),
+                  option: (provided) => ({
+                    // suggestions color
+                    ...provided,
+                    color: "purple",
+                  }),
+                  singleValue: (provided) => ({
+                    //text when complete color
+                    ...provided,
+                    color: "red",
+                  }),
+                },
+              }}
+            />
+          </Input>
+          {/* <Input
             placeholder="Enter pickup location"
             value={pickup}
             onChange={(e) => setPickup(e.target.value)}
-          />
-          <Input
-            placeholder="Where to?"
-            value={dropoff}
-            onChange={(e) => setDropoff(e.target.value)}
-          />
+          /> */}
+          <Input>
+            <GooglePlacesAutocomplete
+              apiKey="AIzaSyDDO2RdmUmclDGV7cTyhZQvK5xWiKnv0Vk"
+              apiOptions={{ language: "en", region: "US" }}
+              autocompletionRequest={{
+                componentRestrictions: {
+                  country: "US",
+                },
+              }}
+              selectProps={{
+                ref: (ref) => {
+                  setSelect(ref);
+                },
+                value: toaddress,
+                blurInputOnSelect: true,
+                onChange: setToAddress,
+                onFocus: handleFocus2,
+                placeholder: "Where to?",
+              }}
+            />
+          </Input>
         </InputBoxes>
         <PlusIcon src="https://img.icons8.com/ios/50/000000/plus-math.png" />
       </InputContainer>
@@ -44,13 +118,16 @@ const Test = () => {
         href={{
           pathname: "/confirm",
           query: {
-            pickup: pickup,
-            dropoff: dropoff,
+            pickup: fromaddress.label,
+            dropoff: toaddress.label,
           },
         }}
       >
         <ConfirBbuttonContainer>Confirm Locations</ConfirBbuttonContainer>
       </Link>
+      <Google>
+        <GooglePlacesAutocomplete apiKey="AIzaSyDDO2RdmUmclDGV7cTyhZQvK5xWiKnv0Vk" />
+      </Google>
       {/* Input Container */}
       {/* Saved Places */}
       {/* Confirm Location */}
@@ -58,7 +135,7 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default Search;
 
 const Wrapper = tw.div`
 bg-gray-200 h-screen
@@ -74,6 +151,10 @@ h-12 cursor-pointer
 
 const FromToIcons = tw.div`
 w-10 flex flex-col mr-2 items-center
+`;
+
+const Google = tw.div`
+
 `;
 
 const InputContainer = tw.div`
@@ -93,11 +174,11 @@ h-3
 `;
 
 const InputBoxes = tw.div`
-flex flex-col flex-1 
+flex flex-col flex-1
 `;
 
-const Input = tw.input`
-h-10 bg-gray-200 my-2 rounded-2 p-2 outline-none border-none
+const Input = tw.div`
+flex-col flex p-2
 `;
 
 const PlusIcon = tw.img`
