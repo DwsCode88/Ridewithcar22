@@ -1,3 +1,4 @@
+import { GeolocateControl } from "mapbox-gl";
 import { useEffect } from "react";
 import tw from "tailwind-styled-components";
 import mapboxgl from "!mapbox-gl";
@@ -13,6 +14,7 @@ const Map = (props) => {
       center: [-99.29011, 39.39172],
       zoom: 3,
     });
+    addToMap2(map);
 
     if (props.pickupCoordinates) {
       addToMap(map, props.pickupCoordinates);
@@ -30,6 +32,21 @@ const Map = (props) => {
 
   const addToMap = (map, coordinates) => {
     const marker1 = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+  };
+
+  const addToMap2 = (map) => {
+    // Add geolocate control to the map.
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        // When active the map will receive updates to the device's location as it changes.
+        trackUserLocation: true,
+        // Draw an arrow next to the location dot to indicate which direction the device is heading.
+        showUserHeading: true,
+      })
+    );
   };
 
   return <Wrapper id="map"></Wrapper>;

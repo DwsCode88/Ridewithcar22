@@ -3,7 +3,7 @@ import tw from "tailwind-styled-components";
 import Link from "next/link";
 import mapboxgl from "!mapbox-gl";
 
-const Search = () => {
+const Test = () => {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
   const [test, setTest] = useState("");
@@ -54,12 +54,11 @@ const Search = () => {
       {/* Input Container */}
       {/* Saved Places */}
       {/* Confirm Location */}
-      {test}
     </Wrapper>
   );
 };
 
-export default Search;
+export default Test;
 
 const Wrapper = tw.div`
 bg-gray-200 h-screen
