@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import tw from "tailwind-styled-components";
 import Link from "next/link";
 import mapboxgl from "!mapbox-gl";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { geocodeByLatLng } from "react-google-places-autocomplete";
 
 const Search = () => {
-  const [pickup, setPickup] = useState("");
+  const [pickup, setPickup] = useState();
   const [dropoff, setDropoff] = useState("");
   const [test, setTest] = useState("");
   const [value, setValue] = useState(null);
@@ -13,7 +14,23 @@ const Search = () => {
   const [toaddress, setToAddress] = useState(null);
   const [select, setSelect] = useState(null);
   const [select2, setSelect2] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [long, setLong] = useState(null);
+  const [userlocation, setUserLocation] = useState(null);
 
+  const LoadingIndicator = (props) => {
+    const { promiseInProgress } = usePromiseTracker();
+    return promiseInProgress && <h1>Hey some async call in progress ! </h1>;
+  };
+
+  useEffect(() => {
+    // Gets Users Location
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLat(position.coords.latitude);
+      setLong(position.coords.longitude);
+    });
+  }, []);
+  console.log(lat, long);
   const handleFocus = (element) => {
     //from input felid
     if (fromaddress) {
@@ -26,8 +43,24 @@ const Search = () => {
       select.select.state.inputValue = toaddress.label;
     }
   };
-  console.log("From", fromaddress.label);
-  console.log("To", toaddress.label);
+  console.log("From", fromaddress);
+  console.log("To", toaddress);
+
+  const getPickCoordinates = () => {
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?` +
+        new URLSearchParams({
+          access_token:
+            "pk.eyJ1IjoiZGV2cmlkZXdpdGhjYXIiLCJhIjoiY2t6dXBmd3kzMXB5bzJvcnhsa2pkc3g0ZCJ9.tLfO-YiAzYSSv90sEsce2g",
+          limit: 1,
+        })
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setUserLocation(data.features[0].place_name);
+      });
+    console.log("userloc", userlocation);
+  };
 
   return (
     <Wrapper>
@@ -108,7 +141,11 @@ const Search = () => {
             />
           </Input>
         </InputBoxes>
-        <PlusIcon src="https://img.icons8.com/ios/50/000000/plus-math.png" />
+
+        <PlusIcon
+          onClick={getPickCoordinates}
+          src="https://img.icons8.com/color/48/000000/marker--v1.png"
+        />
       </InputContainer>
       <SavedPlaces>
         <StarIcon src="https://img.icons8.com/ios-filled/50/ffffff/star--v1.png" />
@@ -118,16 +155,14 @@ const Search = () => {
         href={{
           pathname: "/confirm",
           query: {
-            pickup: fromaddress.label,
-            dropoff: toaddress.label,
+            pickup: fromaddress, // this needs to be fromaddress.label to send just the address to the next page
+            dropoff: toaddress, // this needs to be toaddress.label to send just the address to the next page
           },
         }}
       >
         <ConfirBbuttonContainer>Confirm Locations</ConfirBbuttonContainer>
       </Link>
-      <Google>
-        <GooglePlacesAutocomplete apiKey="AIzaSyDDO2RdmUmclDGV7cTyhZQvK5xWiKnv0Vk" />
-      </Google>
+
       {/* Input Container */}
       {/* Saved Places */}
       {/* Confirm Location */}
@@ -182,7 +217,7 @@ flex-col flex p-2
 `;
 
 const PlusIcon = tw.img`
-w-10 h-10 bg-gray-200 rounded-full ml-3
+w-10 h-10 bg-gray-200 rounded-full ml-3 cursor-pointer
 `;
 
 const SavedPlaces = tw.div`
