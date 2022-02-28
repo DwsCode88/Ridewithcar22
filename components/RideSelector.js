@@ -4,6 +4,9 @@ import { carList } from "./carList";
 
 const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
   const [rideDuration, setRideDuration] = useState(0);
+  const [selected, setSelected] = useState(null);
+
+  console.log("selected", selected);
 
   useEffect(() => {
     rideDuration = fetch(
@@ -12,7 +15,8 @@ const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
       .then((res) => res.json())
       .then((data) => {
         setRideDuration(data.routes[0].duration / 100);
-      });
+      })
+      .catch((e) => console.log(e));
   }, [pickupCoordinates, dropoffCoordinates]);
   return (
     <Wrapper>
@@ -20,7 +24,11 @@ const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
 
       <CarList>
         {carList.map((car, index) => (
-          <Car key={index}>
+          <Car
+            className={selected === car.id ? "bg-slate-300" : "bg-white"}
+            key={car.id}
+            onClick={() => setSelected(car.id)}
+          >
             <CarImage src={car.imgUrl} />
             <CarDetails>
               <Service>{car.service}</Service>
@@ -46,7 +54,7 @@ const Price = tw.div`
 text-sm
 `;
 const Time = tw.div`
-text-xs text-blue-500
+text-xs text-blue-500 
 `;
 const Service = tw.div`
 font-medium

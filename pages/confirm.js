@@ -4,10 +4,28 @@ import Link from "next/link";
 import Map from "../components/Map";
 import { useRouter } from "next/router";
 import RideSelector from "../components/RideSelector";
+import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
-const Confirm = () => {
+const auth = getAuth();
+const user = auth.currentUser;
+
+const Confirm = (props) => {
   const router = useRouter();
   const { pickup, dropoff } = router.query;
+
+  console.log("props", props);
+
+  const addtoDB = async () => {
+    // Add a new document with a generated id.
+    const docRef = await addDoc(collection(db, "rides"), {
+      From: pickup,
+      To: dropoff,
+      Cust: user.displayName,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  };
 
   console.log("pickup", pickup);
   console.log("dropoff", dropoff);
@@ -68,7 +86,7 @@ const Confirm = () => {
         />
 
         <ConfirmButtonContainer>
-          <ConfirmButton>Confirm Ride</ConfirmButton>
+          <ConfirmButton onClick={addtoDB}>Confirm Ride</ConfirmButton>
         </ConfirmButtonContainer>
       </RideContainer>
     </Wrapper>

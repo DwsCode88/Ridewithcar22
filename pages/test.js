@@ -4,6 +4,8 @@ import Link from "next/link";
 import mapboxgl from "!mapbox-gl";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { geocodeByLatLng } from "react-google-places-autocomplete";
+import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const Search = () => {
   const [pickup, setPickup] = useState();
@@ -18,11 +20,6 @@ const Search = () => {
   const [long, setLong] = useState(null);
   const [userlocation, setUserLocation] = useState(null);
 
-  const LoadingIndicator = (props) => {
-    const { promiseInProgress } = usePromiseTracker();
-    return promiseInProgress && <h1>Hey some async call in progress ! </h1>;
-  };
-
   useEffect(() => {
     // Gets Users Location
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -30,6 +27,27 @@ const Search = () => {
       setLong(position.coords.longitude);
     });
   }, []);
+
+  useEffect(() => {
+    // Gets Users Location
+    const getPickCoordinates = () => {
+      fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?` +
+          new URLSearchParams({
+            access_token:
+              "pk.eyJ1IjoiZGV2cmlkZXdpdGhjYXIiLCJhIjoiY2t6dXBmd3kzMXB5bzJvcnhsa2pkc3g0ZCJ9.tLfO-YiAzYSSv90sEsce2g",
+            limit: 1,
+          })
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setUserLocation(data.features[0].place_name);
+        });
+      console.log("userloc", userlocation);
+    };
+    getPickCoordinates();
+  }, [userlocation]);
+
   console.log(lat, long);
   const handleFocus = (element) => {
     //from input felid
@@ -113,6 +131,7 @@ const Search = () => {
                 },
               }}
             />
+            <UsrLocation>Current location: {userlocation}</UsrLocation>
           </Input>
           {/* <Input
             placeholder="Enter pickup location"
@@ -155,8 +174,8 @@ const Search = () => {
         href={{
           pathname: "/confirm",
           query: {
-            pickup: fromaddress, // this needs to be fromaddress.label to send just the address to the next page
-            dropoff: toaddress, // this needs to be toaddress.label to send just the address to the next page
+            pickup: fromaddress && fromaddress.label, // this needs to be fromaddress.label to send just the address to the next page
+            dropoff: toaddress && toaddress.label, // this needs to be toaddress.label to send just the address to the next page
           },
         }}
       >
@@ -171,6 +190,10 @@ const Search = () => {
 };
 
 export default Search;
+
+const UsrLocation = tw.div`
+flex flex-col flex-1 text-sm text-center
+`;
 
 const Wrapper = tw.div`
 bg-gray-200 h-screen
