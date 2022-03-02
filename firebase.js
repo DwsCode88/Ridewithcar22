@@ -23,6 +23,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const provider = new GoogleAuthProvider();
+provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
+provider.addScope("https://www.googleapis.com/auth/userinfo.email");
 const auth = getAuth();
 const db = getFirestore(app);
 
