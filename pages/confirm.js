@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import tw from "tailwind-styled-components";
 import Link from "next/link";
 import Map from "../components/Map";
@@ -11,11 +12,13 @@ import { getAuth } from "firebase/auth";
 const auth = getAuth();
 const user = auth.currentUser;
 
-const Confirm = (props) => {
+const Confirm = () => {
   const router = useRouter();
   const { pickup, dropoff } = router.query;
+  const [selected, setSelected] = React.useState(null);
+  const [service, setService] = React.useState(null);
 
-  console.log("props", props);
+  console.log("Data", selected);
 
   const addtoDB = async () => {
     // Add a new document with a generated id.
@@ -83,10 +86,15 @@ const Confirm = (props) => {
         <RideSelector
           pickupCoordinates={pickupCoordinates}
           dropoffCoordinates={dropoffCoordinates}
+          selected={selected}
+          setSelected={setSelected}
+          setService={service}
         />
 
         <ConfirmButtonContainer>
-          <ConfirmButton onClick={addtoDB}>Confirm Ride</ConfirmButton>
+          <ConfirmButton onClick={addtoDB}>
+            Confirm {selected.service}
+          </ConfirmButton>
         </ConfirmButtonContainer>
       </RideContainer>
     </Wrapper>
